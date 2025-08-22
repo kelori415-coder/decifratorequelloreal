@@ -102,7 +102,7 @@ async def handle_decifra(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # --- MAIN ---
 if __name__ == "__main__":
-    TOKEN = os.environ.get("8251352657:AAGwQ67S8LS1R5FPGCioBp83ffSKlSELKGE")
+    TOKEN = os.environ.get("TELEGRAM_TOKEN")
     app_bot = ApplicationBuilder().token(TOKEN).build()
 
     app_bot.add_handler(CommandHandler("start", start))
@@ -110,5 +110,6 @@ if __name__ == "__main__":
     app_bot.add_handler(CommandHandler("decifra", handle_decifra))
 
     app_bot.run_polling()
+
 
 
