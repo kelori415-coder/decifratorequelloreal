@@ -110,3 +110,4 @@ if __name__ == "__main__":
     app_bot.add_handler(CommandHandler("decifra", handle_decifra))
 
     app_bot.run_polling()
+
