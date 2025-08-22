@@ -77,9 +77,7 @@ def decifra(testo):
 
 # --- TELEGRAM BOT ---
 logging.basicConfig(level=logging.INFO)
-
-# Legge il token dalle variabili d'ambiente
-TOKEN = os.environ.get("8251352657:AAH5XXTjxvD3tR7_9sentuCE4nJj86tL-KI")
+TOKEN = os.environ.get("8251352657:AAH5XXTjxvD3tR7_9sentuCE4nJj86tL-KI")  # Legge il token dalle variabili d'ambiente
 
 def start(update, context):
     update.message.reply_text(
@@ -115,4 +113,3 @@ def main():
 
 if __name__ == "__main__":
     main()
- 
