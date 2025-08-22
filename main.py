@@ -19,13 +19,16 @@ def keep_alive():
 keep_alive()
 
 # ------------------ BOT TELEGRAM ------------------
-from telegram.ext import Updater, CommandHandler
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 import logging
+
+logging.basicConfig(level=logging.INFO)
 
 # --- CIFRATURA SPECIALE ---
 alfabeto = "abcdefghijklmnopqrstuvwxyz"
 
-def cifra(testo):
+def cifra(testo: str) -> str:
     testo = testo.lower()
     risultato = []
     for parola in testo.split(" "):
@@ -46,7 +49,7 @@ def cifra(testo):
         risultato.append(cifrata_parola)
     return "!".join(risultato)
 
-def decifra(testo):
+def decifra(testo: str) -> str:
     parole = testo.split("!")
     risultato = []
     for parola in parole:
@@ -75,41 +78,35 @@ def decifra(testo):
         risultato.append(parola_decifrata)
     return " ".join(risultato)
 
-# --- TELEGRAM BOT ---
-logging.basicConfig(level=logging.INFO)
-TOKEN = os.environ.get("8251352657:AAH5XXTjxvD3tR7_9sentuCE4nJj86tL-KI")  # Legge il token dalle variabili d'ambiente
-
-def start(update, context):
-    update.message.reply_text(
+# --- HANDLER TELEGRAM ---
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
         "Ciao! Sono il tuo bot cifrario 🔐\n"
         "Usa /cifra <testo> per cifrare\n"
         "Usa /decifra <testo> per decifrare"
     )
 
-def handle_cifra(update, context):
+async def handle_cifra(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if context.args:
         testo = " ".join(context.args)
-        update.message.reply_text(cifra(testo))
+        await update.message.reply_text(cifra(testo))
     else:
-        update.message.reply_text("Devi scrivere un messaggio dopo /cifra")
+        await update.message.reply_text("Devi scrivere un messaggio dopo /cifra")
 
-def handle_decifra(update, context):
+async def handle_decifra(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if context.args:
         testo = " ".join(context.args)
-        update.message.reply_text(decifra(testo))
+        await update.message.reply_text(decifra(testo))
     else:
-        update.message.reply_text("Devi scrivere un messaggio dopo /decifra")
+        await update.message.reply_text("Devi scrivere un messaggio dopo /decifra")
 
-def main():
-    updater = Updater(TOKEN, use_context=True)
-    dp = updater.dispatcher
-
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("cifra", handle_cifra))
-    dp.add_handler(CommandHandler("decifra", handle_decifra))
-
-    updater.start_polling()
-    updater.idle()
-
+# --- MAIN ---
 if __name__ == "__main__":
-    main()
+    TOKEN = os.environ.get("8251352657:AAH5XXTjxvD3tR7_9sentuCE4nJj86tL-KI")
+    app_bot = ApplicationBuilder().token(TOKEN).build()
+
+    app_bot.add_handler(CommandHandler("start", start))
+    app_bot.add_handler(CommandHandler("cifra", handle_cifra))
+    app_bot.add_handler(CommandHandler("decifra", handle_decifra))
+
+    app_bot.run_polling()
